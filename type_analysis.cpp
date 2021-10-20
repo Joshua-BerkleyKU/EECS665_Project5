@@ -144,23 +144,25 @@ void IntLitNode::typeAnalysis(TypeAnalysis * ta){
 }
 
 void StrLitNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(STRING));
 }
 
 void TrueNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(BOOL));
 }
-
 
 void FalseNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(BOOL));
 }
 
+void TypeNode::typeAnalysis(TypeAnalysis * ta){
+	ta->nodeType(this, BasicType::produce(VOID));
+}
+
+void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
+	myID->typeAnalysis(ta);
+	//still needs work i think
+	//might need errors 
+}
 
 }

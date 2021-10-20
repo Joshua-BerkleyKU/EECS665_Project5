@@ -102,6 +102,7 @@ public:
 	void unparse(std::ostream&, int) override = 0;
 	virtual const DataType * getType() const = 0;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *);
 };
 
 class RecordTypeNode : public TypeNode{
@@ -111,6 +112,7 @@ public:
 	void unparse(std::ostream& out, int indent) override;
 	virtual const DataType * getType() const override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	IDNode * myID;
 	const RecordType * myType;
