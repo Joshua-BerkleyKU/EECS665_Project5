@@ -143,4 +143,24 @@ void IntLitNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, BasicType::produce(INT));
 }
 
+void StrLitNode::typeAnalysis(TypeAnalysis * ta){
+	// IntLits never fail their type analysis and always
+	// yield the type INT
+	ta->nodeType(this, BasicType::produce(STRING));
+}
+
+void TrueNode::typeAnalysis(TypeAnalysis * ta){
+	// IntLits never fail their type analysis and always
+	// yield the type INT
+	ta->nodeType(this, BasicType::produce(BOOL));
+}
+
+
+void FalseNode::typeAnalysis(TypeAnalysis * ta){
+	// IntLits never fail their type analysis and always
+	// yield the type INT
+	ta->nodeType(this, BasicType::produce(BOOL));
+}
+
+
 }
