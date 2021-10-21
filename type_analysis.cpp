@@ -681,7 +681,7 @@ void NegNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * ExpType = ta->nodeType(myExp);
 
-	if (ExpType->isInt() || ExpType->getReturnType()->isInt() )
+	if (ExpType->isInt() || ExpType->asFn()->getReturnType()->isInt() )
 	{
 		ta->nodeType(this, ExpType);
 		return;
@@ -696,7 +696,7 @@ void NotNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * ExpType = ta->nodeType(myExp);
 
-	if (ExpType->isBool() || ExpType->getReturnType()->isBool())
+	if (ExpType->isBool() || ExpType->asFn()->getReturnType()->isBool())
 	{
 		ta->nodeType(this, ExpType);
 		return;
