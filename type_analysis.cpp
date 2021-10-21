@@ -241,4 +241,34 @@ void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
+void NegNode::typeAnalysis(TypeAnalysis * ta){
+	myExp->typeAnalysis(ta);
+
+	const DataType * ExpType = ta->nodeType(myExp);
+
+	if (ExpType->isInt())
+	{
+		ta->nodeType(this, ExpType);
+		return;
+	}
+	
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
+void NotNode::typeAnalysis(TypeAnalysis * ta){
+	myExp->typeAnalysis(ta);
+
+	const DataType * ExpType = ta->nodeType(myExp);
+
+	if (ExpType->isBool())
+	{
+		ta->nodeType(this, ExpType);
+		return;
+	}
+	
+	ta->errLogicOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
 }
