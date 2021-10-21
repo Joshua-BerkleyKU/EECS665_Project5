@@ -579,23 +579,131 @@ void IntLitNode::typeAnalysis(TypeAnalysis * ta){
 }
 
 void StrLitNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(STRING));
 }
 
 void TrueNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(BOOL));
 }
-
 
 void FalseNode::typeAnalysis(TypeAnalysis * ta){
-	// IntLits never fail their type analysis and always
-	// yield the type INT
 	ta->nodeType(this, BasicType::produce(BOOL));
 }
 
+void TypeNode::typeAnalysis(TypeAnalysis * ta){
+	ta->nodeType(this, BasicType::produce(VOID));
+}
+
+void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
+	myID->typeAnalysis(ta);
+	//still needs work i think
+	//might need errors 
+}
+
+void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myDst->typeAnalysis(ta);
+
+	const DataType * DstType = ta->nodeType(myDst);
+
+	if (DstType->asFn != nullptr)
+	{
+		ta->errReadFn(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+	
+	if (DstType->isBool() || DstType->isInt() || DstType->isString()){
+		ta->nodeType(this, DstType);
+		return;
+	}
+
+	//add errors
+}
+
+void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
+	mySrc->typeAnalysis(ta);
+
+	const DataType * SrcType = ta->nodeType(mySrc);
+
+	if (SrcType->asFn != nullptr)
+	{
+		ta->errWriteFn(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+
+	if (SrcType->isVoid())
+	{
+		ta->errWriteVoid(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+
+	if (SrcType->isBool() || SrcType->isInt() || SrcType->isString())
+	{
+		ta->nodeType(this, SrcType);
+		return;
+	}
+
+	//add record error
+}
+
+void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myLVal->typeAnalysis(ta);
+
+	const DataType * LValType = ta->nodeType(myLVal);
+
+	if (LValType->isInt() && LValType->asFn == nullptr )
+	{
+		ta->nodeType(this, LValType);
+		return;
+	}
+
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+
+}
+
+void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myLVal->typeAnalysis(ta);
+
+	const DataType * LValType = ta->nodeType(myLVal);
+
+	if (LValType->isInt() && LValType->asFn == nullptr)
+	{
+		ta->nodeType(this, LValType);
+		return;
+	}
+	
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
+void NegNode::typeAnalysis(TypeAnalysis * ta){
+	myExp->typeAnalysis(ta);
+
+	const DataType * ExpType = ta->nodeType(myExp);
+
+	if (ExpType->isInt() || ExpType->getReturnType()->isInt() )
+	{
+		ta->nodeType(this, ExpType);
+		return;
+	}
+	
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
+void NotNode::typeAnalysis(TypeAnalysis * ta){
+	myExp->typeAnalysis(ta);
+
+	const DataType * ExpType = ta->nodeType(myExp);
+
+	if (ExpType->isBool() || ExpType->getReturnType()->isBool())
+	{
+		ta->nodeType(this, ExpType);
+		return;
+	}
+	
+	ta->errLogicOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
 
 }

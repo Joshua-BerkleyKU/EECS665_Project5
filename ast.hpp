@@ -103,6 +103,7 @@ public:
 	void unparse(std::ostream&, int) override = 0;
 	virtual const DataType * getType() const = 0;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *);
 };
 
 class RecordTypeNode : public TypeNode{
@@ -112,6 +113,7 @@ public:
 	void unparse(std::ostream& out, int indent) override;
 	virtual const DataType * getType() const override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	IDNode * myID;
 	const RecordType * myType;
@@ -206,6 +208,7 @@ public:
 	: StmtNode(p), myDst(dstIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	LValNode * myDst;
 };
@@ -216,6 +219,7 @@ public:
 	: StmtNode(p), mySrc(srcIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	ExpNode * mySrc;
 };
@@ -226,6 +230,7 @@ public:
 	: StmtNode(p), myLVal(lvalIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	LValNode * myLVal;
 };
@@ -236,6 +241,7 @@ public:
 	: StmtNode(p), myLVal(lvalIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	LValNode * myLVal;
 };
@@ -427,6 +433,7 @@ public:
 	: UnaryExpNode(p, exp){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 };
 
 class NotNode : public UnaryExpNode{
@@ -435,6 +442,7 @@ public:
 	: UnaryExpNode(p, exp){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 };
 
 class VoidTypeNode : public TypeNode{
