@@ -165,4 +165,49 @@ void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
 	//might need errors 
 }
 
+void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myDst->typeAnalysis(ta);
+
+	const DataType * DstType = ta->nodeType(myDst);
+
+	if (DstType->asFn != nullptr)
+	{
+		ta->errReadFn(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+	
+	if (DstType->isBool() || DstType->isInt() || DstType->isString()){
+		ta->nodeType(this, DstType);
+		return;
+	}
+
+	//add errors
+}
+
+void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
+	mySrc->typeAnalysis(ta);
+
+	const DataType * SrcType = ta->nodeType(mySrc);
+
+	if (SrcType->asFn != nullptr)
+	{
+		ta->errWriteFn(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+
+	if (SrcType->isVoid())
+	{
+		ta->errWriteVoid(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+	}
+
+	if (SrcType->isBool() || SrcType->isInt() || SrcType->isString())
+	{
+		ta->nodeType(this, SrcType);
+		return;
+	}
+
+	//add record error
+}
+
 }
