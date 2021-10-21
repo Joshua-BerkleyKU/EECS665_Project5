@@ -210,4 +210,35 @@ void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
 	//add record error
 }
 
+void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myLVal->typeAnalysis(ta);
+
+	const DataType * LValType = ta->nodeType(myLVal);
+
+	if (LValType->isInt())
+	{
+		ta->nodeType(this, LValType);
+		return;
+	}
+
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+
+}
+
+void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myLVal->typeAnalysis(ta);
+
+	const DataType * LValType = ta->nodeType(myLVal);
+
+	if (LValType->isInt())
+	{
+		ta->nodeType(this, LValType);
+		return;
+	}
+	
+	ta->errMathOpd(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
 }
