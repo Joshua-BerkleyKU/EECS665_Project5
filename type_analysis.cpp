@@ -605,7 +605,7 @@ void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * DstType = ta->nodeType(myDst);
 
-	if (DstType->asFn != nullptr)
+	if (DstType->asFn() != nullptr)
 	{
 		ta->errReadFn(this->pos());
 		ta->nodeType(this, ErrorType::produce());
@@ -624,7 +624,7 @@ void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * SrcType = ta->nodeType(mySrc);
 
-	if (SrcType->asFn != nullptr)
+	if (SrcType->asFn() != nullptr)
 	{
 		ta->errWriteFn(this->pos());
 		ta->nodeType(this, ErrorType::produce());
@@ -650,7 +650,7 @@ void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * LValType = ta->nodeType(myLVal);
 
-	if (LValType->isInt() && LValType->asFn == nullptr )
+	if (LValType->isInt() && LValType->asFn() == nullptr )
 	{
 		ta->nodeType(this, LValType);
 		return;
@@ -666,7 +666,7 @@ void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * LValType = ta->nodeType(myLVal);
 
-	if (LValType->isInt() && LValType->asFn == nullptr)
+	if (LValType->isInt() && LValType->asFn() == nullptr)
 	{
 		ta->nodeType(this, LValType);
 		return;
