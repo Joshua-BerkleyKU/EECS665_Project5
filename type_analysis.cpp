@@ -215,7 +215,7 @@ void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * LValType = ta->nodeType(myLVal);
 
-	if (LValType->isInt())
+	if (LValType->isInt() && LValType->asFn == nullptr )
 	{
 		ta->nodeType(this, LValType);
 		return;
@@ -231,7 +231,7 @@ void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * LValType = ta->nodeType(myLVal);
 
-	if (LValType->isInt())
+	if (LValType->isInt() && LValType->asFn == nullptr)
 	{
 		ta->nodeType(this, LValType);
 		return;
