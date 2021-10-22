@@ -817,7 +817,7 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 		for (auto falsebody : *myBodyFalse)
 		{
-			truebody->typeAnalysis(ta);
+			falsebody->typeAnalysis(ta);
 		}
 
 		ta->nodeType(this, BasicType::produce(VOID));
