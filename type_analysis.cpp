@@ -430,6 +430,7 @@ void AndNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void OrNode::typeAnalysis(TypeAnalysis * ta) {
+	std::cout << "FOUND OR NODE!!!!\n";
 	myExp1->typeAnalysis(ta);
 	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
