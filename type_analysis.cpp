@@ -479,7 +479,7 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 		{
 			if (left == right)
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -494,7 +494,7 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left == right->asFn()->getReturnType())
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -512,7 +512,7 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left->asFn()->getReturnType() == right)
 			{
-				ta->nodeType(this, right);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -527,7 +527,7 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left->asFn()->getReturnType() == right->asFn()->getReturnType())
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -551,7 +551,7 @@ void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
 		{
 			if (left == right)
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -566,7 +566,7 @@ void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left == right->asFn()->getReturnType())
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -584,7 +584,7 @@ void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left->asFn()->getReturnType() == right)
 			{
-				ta->nodeType(this, right);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
@@ -599,7 +599,7 @@ void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
 			
 			if (left->asFn()->getReturnType() == right->asFn()->getReturnType())
 			{
-				ta->nodeType(this, left);
+				ta->nodeType(this, BasicType::produce(BOOL));
 				return;
 			}
 			else {
