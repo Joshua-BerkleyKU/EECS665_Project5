@@ -438,12 +438,14 @@ void OrNode::typeAnalysis(TypeAnalysis * ta) {
 	{
 		if (!left->isBool())
 		{
+			std::cout << "1" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
 	else {
 		if (!left->asFn()->getReturnType()->isBool() || !myExp1->isFnCall())
 		{
+			std::cout << "2" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
@@ -451,12 +453,14 @@ void OrNode::typeAnalysis(TypeAnalysis * ta) {
 	{
 		if (!right->isBool())
 		{
+			std::cout << "3" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
 	else {
 		if (!right->asFn()->getReturnType()->isBool() || !myExp2->isFnCall())
 		{
+			std::cout << "4" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
