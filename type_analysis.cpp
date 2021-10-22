@@ -430,7 +430,6 @@ void AndNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void OrNode::typeAnalysis(TypeAnalysis * ta) {
-	std::cout << "FOUND OR NODE!!!!\n";
 	myExp1->typeAnalysis(ta);
 	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
@@ -439,14 +438,12 @@ void OrNode::typeAnalysis(TypeAnalysis * ta) {
 	{
 		if (!left->isBool())
 		{
-			std::cout << "1" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
 	else {
 		if (!left->asFn()->getReturnType()->isBool() || !myExp1->isFnCall())
 		{
-			std::cout << "2" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
@@ -454,14 +451,12 @@ void OrNode::typeAnalysis(TypeAnalysis * ta) {
 	{
 		if (!right->isBool())
 		{
-			std::cout << "3" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
 	else {
 		if (!right->asFn()->getReturnType()->isBool() || !myExp2->isFnCall())
 		{
-			std::cout << "4" << '\n';
 			ta->errLogicOpd(this->pos());
 		}
 	}
@@ -936,6 +931,7 @@ void IfStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType)
 			stmt->typeAnalysis(ta, currentFnType);
 		}
 		ta->nodeType(this, BasicType::produce(VOID));
+		return;
 	}
 
 	ta->errIfCond(this->pos());
@@ -960,6 +956,7 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnT
 		}
 
 		ta->nodeType(this, BasicType::produce(VOID));
+		return;
 	}
 	
 	ta->errIfCond(this->pos());
@@ -978,6 +975,7 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnTy
 			stmt->typeAnalysis(ta, currentFnType);
 		}
 		ta->nodeType(this, BasicType::produce(VOID));
+		return;
 	}
 
 	ta->errWhileCond(this->pos());
