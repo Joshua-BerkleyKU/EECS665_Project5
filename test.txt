@@ -12,12 +12,22 @@ bool dingus() {
 	return true;
 }
 
+Record A {
+	int z;
+}
+
+Record B {
+	int duh;
+}
+
 int main() {
 	int b;
 	b = 2;
 
-	receive func;
-	report func;
+	A zach;
+	B cody;
+
+	A = B;
 
 	a = func();
 	return a;
