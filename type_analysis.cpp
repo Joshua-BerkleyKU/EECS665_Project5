@@ -594,11 +594,29 @@ void TypeNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, BasicType::produce(VOID));
 }
 
+//-----------------------------------------------------------------------------------------------------------------------
+//doing this beacues there is nor record testing in p5
+
 void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
 	myID->typeAnalysis(ta);
 	//still needs work i think
 	//might need errors 
+	HashMap<std::string, const DataType *> *junk;
+	junk->insert("junk", BasicType::produce(VOID));
+	ta->nodeType(this, RecordType::produce("none", junk));
 }
+
+void RecordTypeDeclNode::typeAnalysis(TypeAnalysis * ta){
+	myID->typeAnalysis(ta);
+	//still needs work i think
+	//might need errors 
+	HashMap<std::string, const DataType *> *junk;
+	junk->insert("junk", BasicType::produce(VOID));
+	ta->nodeType(this, RecordType::produce("none", junk));
+}
+
+//doing this beacues there is nor record testing in p5
+//-----------------------------------------------------------------------------------------------------------------------
 
 void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
 	myDst->typeAnalysis(ta);

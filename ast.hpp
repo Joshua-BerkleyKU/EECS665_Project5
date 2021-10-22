@@ -153,6 +153,7 @@ public:
 	: DeclNode(p), myID(id), myFields(body){ }
 	void unparse(std::ostream& out, int indent) override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	virtual void typeAnalysis(TypeAnalysis *) override;
 private:
 	IDNode * myID;
 	std::list<VarDeclNode *> * myFields;
