@@ -8,20 +8,16 @@ int bruh(int a, int b) {
 	return a + b;
 }
 
-void yuh() {
-	return 5;
+bool dingus() {
+	return true;
 }
 
 int main() {
-	a = func();
 	int b;
 	b = 2;
-	int c;
-	c = 1;
-	bool heehaw;
-	heehaw = false;
-	bruh(a, b);
-	bruh(a, b, c);
-	bruh(b, heehaw, c);
+	b();
+
+
+	a = func();
 	return a;
 }
