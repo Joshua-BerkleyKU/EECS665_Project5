@@ -824,7 +824,7 @@ void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFn
 		ta->nodeType(this, ErrorType::produce());
 	}
 	
-	if (DstType->isBool() || DstType->isInt() || DstType->isString()){
+	if (DstType->validVarType()){
 		ta->nodeType(this, DstType);
 		return;
 	}
@@ -924,7 +924,7 @@ void IfStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType)
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto stmt : *myBody)
 		{
@@ -943,7 +943,7 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnT
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto truebody : *myBodyTrue)
 		{
@@ -968,7 +968,7 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnTy
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto stmt : *myBody)
 		{
@@ -985,6 +985,14 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnTy
 void CallStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
 	myCallExp->typeAnalysis(ta);
 	ta->nodeType(this, ta->nodeType(myCallExp));
+}
+
+void IndexNode::typeAnalysis(TypeAnalysis * ta) {
+	myBase->typeAnalysis(ta);
+	const DataType * BaseType = ta->nodeType(myBase);
+	myIdx->typeAnalysis(ta);
+	const DataType * IdxType = ta->nodeType(myIdx);
+	ta->nodeType(this, myIdx);
 }
 
 }

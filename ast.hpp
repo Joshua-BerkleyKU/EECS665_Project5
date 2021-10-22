@@ -92,6 +92,7 @@ public:
 	}
 	void unparse(std::ostream& out, int indent) override;
 	virtual bool nameAnalysis(SymbolTable * symTab) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 private:
 	IDNode * myBase;
 	IDNode * myIdx;
@@ -439,7 +440,7 @@ public:
 	: UnaryExpNode(p, exp){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	virtual void typeAnalysis(TypeAnalysis *) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 };
 
 class NotNode : public UnaryExpNode{
@@ -448,7 +449,7 @@ public:
 	: UnaryExpNode(p, exp){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	virtual void typeAnalysis(TypeAnalysis *) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 };
 
 class VoidTypeNode : public TypeNode{
