@@ -12,22 +12,17 @@ bool dingus() {
 	return true;
 }
 
-Record A {
-	int z;
-}
-
-Record B {
-	int duh;
-}
-
 int main() {
 	int b;
 	b = 2;
 
-	A zach;
-	B cody;
+	if (true && false) {
+		// nothing
+	}
 
-	A = B;
+	if (!false) {
+		// ;lsadkng;laiseng;liasdng;lskjdf
+	}
 
 	a = func();
 	return a;
