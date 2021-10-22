@@ -706,4 +706,64 @@ void NotNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
+void IfStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myCond->typeAnalysis(ta);
+
+	const DataType * CondType = ta->nodeType(myCond);
+
+	if (CondType->isBool())
+	{
+		for (auto stmt : *myBody)
+		{
+			stmt->typeAnalysis(ta);
+		}
+		ta->nodeType(this, BasicType::produce(VOID));
+	}
+
+	ta->errIfCond(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
+void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myCond->typeAnalysis(ta);
+
+	const DataType * CondType = ta->nodeType(myCond);
+
+	if (CondType->isBool())
+	{
+		for (auto truebody : *myBodyTrue)
+		{
+			truebody->typeAnalysis(ta);
+		}
+
+		for (auto falsebody : *myBodyFalse)
+		{
+			truebody->typeAnalysis(ta);
+		}
+
+		ta->nodeType(this, BasicType::produce(VOID));
+	}
+	
+	ta->errIfCond(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
+void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
+	myCond->typeAnalysis(ta);
+
+	const DataType * CondType = ta->nodeType(myCond);
+
+	if (CondType->isBool())
+	{
+		for (auto stmt : *myBody)
+		{
+			stmt->typeAnalysis(ta);
+		}
+		ta->nodeType(this, BasicType::produce(VOID));
+	}
+
+	ta->errWhileCond(this->pos());
+	ta->nodeType(this, ErrorType::produce());
+}
+
 }
