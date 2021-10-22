@@ -30,8 +30,9 @@ void ProgramNode::typeAnalysis(TypeAnalysis * ta){
 	// the entire tree, getting the types for
 	// each element in turn and adding them
 	// to the ta object's hashMap
+	const DataType * noType = BasicType::produce(VOID);
 	for (auto global : *myGlobals){
-		global->typeAnalysis(ta);
+		global->typeAnalysis(ta, noType);
 	}
 
 	//The type of the program node will never
@@ -41,32 +42,63 @@ void ProgramNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, BasicType::produce(VOID));
 }
 
-void FnDeclNode::typeAnalysis(TypeAnalysis * ta){
-
-	//HINT: you might want to change the signature for
-	// typeAnalysis on FnBodyNode to take a second
-	// argument which is the type of the current 
-	// function. This will help you to know at a 
-	// return statement whether the return type matches
-	// the current function
-
-	//Note: this function may need extra code
-
+void FnDeclNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
+	const DataType * retType = myRetType->getType();
 	for (auto stmt : *myBody){
-		stmt->typeAnalysis(ta);
+		stmt->typeAnalysis(ta, retType);
 	}
 }
 
-void StmtNode::typeAnalysis(TypeAnalysis * ta){
+void StmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	TODO("Implement me in the subclass");
 }
 
-void ReturnStmtNode::typeAnalysis(TypeAnalysis * ta) {
+void ReturnStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
 	myExp->typeAnalysis(ta);
+	auto returnType = ta->nodeType(myExp);
+	if (returnType->asRecord() || returnType->asError())
+	{
+		ta->errRetWrong(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+		return;
+	}
+	
+	if (currentFnType->isVoid() && !returnType->isVoid())
+	{
+		ta->errRetWrong(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+		return;
+	}
+	if (!currentFnType->isVoid() && returnType->isVoid())
+	{
+		ta->errRetEmpty(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+		return;
+	}
+	if (returnType->asFn())
+	{
+		if (currentFnType != returnType->asFn()->getReturnType())
+		{
+			ta->errRetWrong(this->pos());
+			ta->nodeType(this, ErrorType::produce());
+			return;
+		}
+		ta->nodeType(this, ta->nodeType(myExp));
+		return;
+	}
+	
+	if (currentFnType != returnType)
+	{
+		ta->errRetWrong(this->pos());
+		ta->nodeType(this, ErrorType::produce());
+		return;
+	}
+	
+	
 	ta->nodeType(this, ta->nodeType(myExp));
 }
 
-void AssignStmtNode::typeAnalysis(TypeAnalysis * ta){
+void AssignStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
 	myExp->typeAnalysis(ta);
 
 	//It can be a bit of a pain to write 
@@ -181,11 +213,11 @@ void CallExpNode::typeAnalysis(TypeAnalysis * ta) {
 	
 }
 
-void DeclNode::typeAnalysis(TypeAnalysis * ta){
+void DeclNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	TODO("Override me in the subclass");
 }
 
-void VarDeclNode::typeAnalysis(TypeAnalysis * ta){
+void VarDeclNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	// VarDecls always pass type analysis, since they 
 	// are never used in an expression. You may choose
 	// to type them void (like this), as discussed in class
@@ -487,7 +519,73 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
-	
+	const DataType * left = ta->nodeType(myExp1);
+	const DataType * right = ta->nodeType(myExp2);
+
+	if (left->asFn() == nullptr)
+	{
+		if (right->asFn() == nullptr)
+		{
+			if (left == right)
+			{
+				ta->nodeType(this, left);
+				return;
+			}
+			else {
+				ta->errEqOpr(this->pos());
+			}
+		}
+		else {
+			if (!myExp2->isFnCall())
+			{
+				ta->errEqOpd(this->pos());
+			}
+			
+			if (left == right->asFn()->getReturnType())
+			{
+				ta->nodeType(this, left);
+				return;
+			}
+			else {
+				ta->errEqOpr(this->pos());
+			}
+		}
+	}
+	else {
+		if (right->asFn() == nullptr)
+		{
+			if (!myExp1->isFnCall())
+			{
+				ta->errEqOpd(this->pos());
+			}
+			
+			if (left->asFn()->getReturnType() == right)
+			{
+				ta->nodeType(this, right);
+				return;
+			}
+			else {
+				ta->errEqOpr(this->pos());
+			}
+		}
+		else {
+			if (!myExp1->isFnCall() || !myExp2->isFnCall())
+			{
+				ta->errEqOpd(this->pos());
+			}
+			
+			if (left->asFn()->getReturnType() == right->asFn()->getReturnType())
+			{
+				ta->nodeType(this, left);
+				return;
+			}
+			else {
+				ta->errEqOpr(this->pos());
+			}
+			
+		}
+	}
+	ta->nodeType(this, ErrorType::produce());
 }
 
 void LessNode::typeAnalysis(TypeAnalysis * ta) {
@@ -670,7 +768,7 @@ void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, RecordType::produce("none", junk));
 }
 
-void RecordTypeDeclNode::typeAnalysis(TypeAnalysis * ta){
+void RecordTypeDeclNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myID->typeAnalysis(ta);
 	//still needs work i think
 	//might need errors 
@@ -684,7 +782,7 @@ void RecordTypeDeclNode::typeAnalysis(TypeAnalysis * ta){
 //doing this beacues there is nor record testing in p5
 //-----------------------------------------------------------------------------------------------------------------------
 
-void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
+void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myDst->typeAnalysis(ta);
 
 	const DataType * DstType = ta->nodeType(myDst);
@@ -703,7 +801,7 @@ void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
 	//add errors
 }
 
-void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
+void ReportStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	mySrc->typeAnalysis(ta);
 
 	const DataType * SrcType = ta->nodeType(mySrc);
@@ -729,7 +827,7 @@ void ReportStmtNode::typeAnalysis(TypeAnalysis * ta){
 	//add record error
 }
 
-void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
+void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myLVal->typeAnalysis(ta);
 
 	const DataType * LValType = ta->nodeType(myLVal);
@@ -745,7 +843,7 @@ void PostDecStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 }
 
-void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta){
+void PostIncStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myLVal->typeAnalysis(ta);
 
 	const DataType * LValType = ta->nodeType(myLVal);
@@ -790,7 +888,7 @@ void NotNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
-void IfStmtNode::typeAnalysis(TypeAnalysis * ta){
+void IfStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myCond->typeAnalysis(ta);
 
 	const DataType * CondType = ta->nodeType(myCond);
@@ -799,7 +897,7 @@ void IfStmtNode::typeAnalysis(TypeAnalysis * ta){
 	{
 		for (auto stmt : *myBody)
 		{
-			stmt->typeAnalysis(ta);
+			stmt->typeAnalysis(ta, currentFnType);
 		}
 		ta->nodeType(this, BasicType::produce(VOID));
 	}
@@ -808,7 +906,7 @@ void IfStmtNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
-void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
+void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myCond->typeAnalysis(ta);
 
 	const DataType * CondType = ta->nodeType(myCond);
@@ -817,12 +915,12 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
 	{
 		for (auto truebody : *myBodyTrue)
 		{
-			truebody->typeAnalysis(ta);
+			truebody->typeAnalysis(ta, currentFnType);
 		}
 
 		for (auto falsebody : *myBodyFalse)
 		{
-			falsebody->typeAnalysis(ta);
+			falsebody->typeAnalysis(ta, currentFnType);
 		}
 
 		ta->nodeType(this, BasicType::produce(VOID));
@@ -832,7 +930,7 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
-void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
+void WhileStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 	myCond->typeAnalysis(ta);
 
 	const DataType * CondType = ta->nodeType(myCond);
@@ -841,7 +939,7 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
 	{
 		for (auto stmt : *myBody)
 		{
-			stmt->typeAnalysis(ta);
+			stmt->typeAnalysis(ta, currentFnType);
 		}
 		ta->nodeType(this, BasicType::produce(VOID));
 	}
@@ -850,7 +948,7 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
 	ta->nodeType(this, ErrorType::produce());
 }
 
-void CallStmtNode::typeAnalysis(TypeAnalysis * ta) {
+void CallStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
 	myCallExp->typeAnalysis(ta);
 	ta->nodeType(this, ta->nodeType(myCallExp));
 }
