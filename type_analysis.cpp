@@ -239,6 +239,8 @@ void IDNode::typeAnalysis(TypeAnalysis * ta){
 }
 
 void PlusNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -275,6 +277,8 @@ void PlusNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void MinusNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 
@@ -312,6 +316,8 @@ void MinusNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void TimesNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -348,6 +354,8 @@ void TimesNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void DivideNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -384,6 +392,8 @@ void DivideNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void AndNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -420,6 +430,8 @@ void AndNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void OrNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -456,6 +468,8 @@ void OrNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 
@@ -526,6 +540,8 @@ void EqualsNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 
@@ -596,6 +612,8 @@ void NotEqualsNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void LessNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -632,6 +650,8 @@ void LessNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void LessEqNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -668,6 +688,8 @@ void LessEqNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void GreaterNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
@@ -704,6 +726,8 @@ void GreaterNode::typeAnalysis(TypeAnalysis * ta) {
 }
 
 void GreaterEqNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp1->typeAnalysis(ta);
+	myExp2->typeAnalysis(ta);
 	const DataType * left = ta->nodeType(myExp1);
 	const DataType * right = ta->nodeType(myExp2);
 	if (left->asFn() == nullptr)
