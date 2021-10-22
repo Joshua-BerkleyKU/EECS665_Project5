@@ -5,7 +5,7 @@ int func() {
 }
 
 int bruh(int a, int b) {
-	return 5;
+	return a + b;
 }
 
 int main() {
