@@ -992,7 +992,7 @@ void IndexNode::typeAnalysis(TypeAnalysis * ta) {
 	const DataType * BaseType = ta->nodeType(myBase);
 	myIdx->typeAnalysis(ta);
 	const DataType * IdxType = ta->nodeType(myIdx);
-	ta->nodeType(this, myIdx);
+	ta->nodeType(this, ta->nodeType(myIdx));
 }
 
 }
