@@ -658,7 +658,7 @@ void RecordTypeNode::typeAnalysis(TypeAnalysis * ta){
 	myID->typeAnalysis(ta);
 	//still needs work i think
 	//might need errors 
-	HashMap<std::string, const DataType *> *junk;
+	HashMap<std::string, const DataType *> *junk = new HashMap<std::string, const DataType *>();
 	const DataType * junkType = BasicType::produce(VOID);
 	std::pair<std::string, const DataType *> junkPair(std::string("junk"), junkType);
 	junk->insert(junkPair);
@@ -669,7 +669,7 @@ void RecordTypeDeclNode::typeAnalysis(TypeAnalysis * ta){
 	myID->typeAnalysis(ta);
 	//still needs work i think
 	//might need errors 
-	HashMap<std::string, const DataType *> *junk;
+	HashMap<std::string, const DataType *> *junk = new HashMap<std::string, const DataType *>();
 	const DataType * junkType = BasicType::produce(VOID);
 	std::pair<std::string, const DataType *> junkPair(std::string("junk"), junkType);
 	junk->insert(junkPair);
