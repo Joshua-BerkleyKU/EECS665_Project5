@@ -14,14 +14,6 @@ void yuh() {
 
 int main() {
 	a = func();
-	int b;
-	b = 2;
-	int c;
-	c = 3;
-	bool bruh;
-	bruh = true;
-	b = something(a, b);
-	b = something(a);
-	b = something(a, c);
+	
 	return a;
 }
