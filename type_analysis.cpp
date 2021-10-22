@@ -54,8 +54,15 @@ void StmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType){
 }
 
 void ReturnStmtNode::typeAnalysis(TypeAnalysis * ta, const DataType * currentFnType) {
-	myExp->typeAnalysis(ta);
-	auto returnType = ta->nodeType(myExp);
+	const DataType * returnType;
+	if (myExp)
+	{
+		myExp->typeAnalysis(ta);
+		returnType = ta->nodeType(myExp);
+	}
+	else {
+		returnType = BasicType::produce(VOID);
+	}
 	if (returnType->asRecord() || returnType->asError())
 	{
 		ta->errRetWrong(this->pos());
