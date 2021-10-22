@@ -16,32 +16,8 @@ int main() {
 	int b;
 	b = 2;
 
-	if (true || false) {
-		return 1;
-	}
-
-	if (dingus()) {
-		return 2;
-	}
-
-	if (dingus) {
-		return 4;
-	}
-
-	if (b == 2) {
-		return 5;
-	}
-	else {
-		return 2;
-	}
-
-	while(dingus()) {
-		return 4;
-	}
-
-	while(6) {
-		return 1;
-	}
+	receive a;
+	report a;
 
 	a = func();
 	return a;
