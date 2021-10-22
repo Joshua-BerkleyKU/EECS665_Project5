@@ -695,7 +695,7 @@ void ReceiveStmtNode::typeAnalysis(TypeAnalysis * ta){
 		ta->nodeType(this, ErrorType::produce());
 	}
 	
-	if (DstType->isBool() || DstType->isInt() || DstType->isString()){
+	if (DstType->validVarType()){
 		ta->nodeType(this, DstType);
 		return;
 	}
@@ -853,6 +853,14 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
 void CallStmtNode::typeAnalysis(TypeAnalysis * ta) {
 	myCallExp->typeAnalysis(ta);
 	ta->nodeType(this, ta->nodeType(myCallExp));
+}
+
+void IndexNode::typeAnalysis(TypeAnalysis * ta) {
+	myBase->typeAnalysis(ta);
+	const DataType * BaseType = ta->nodeType(myBase);
+	myIdx->typeAnalysis(ta);
+	const DataType * IdxType = ta->nodeType(myIdx);
+	ta->nodeType(this, myIdx);
 }
 
 }
