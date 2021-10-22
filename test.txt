@@ -19,7 +19,7 @@ int main() {
 	int c;
 	c = 3;
 	bool bruh;
-	bool = true;
+	bruh = true;
 	b = something(a, b);
 	b = something(a);
 	b = something(a, c);
