@@ -303,6 +303,7 @@ public:
 	void unparse(std::ostream& out, int indent) override;
 	void unparseNested(std::ostream& out) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 	bool isFnCall() { return true; }
 private:
 	IDNode * myID;

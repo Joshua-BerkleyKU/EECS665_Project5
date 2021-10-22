@@ -95,11 +95,21 @@ void AssignExpNode::typeAnalysis(TypeAnalysis * ta){
 	const DataType * tgtType = ta->nodeType(myDst);
 	const DataType * srcType = ta->nodeType(mySrc);
 
-	//While incomplete, this gives you one case for 
-	// assignment: if the types are exactly the same
-	// it is usually ok to do the assignment. One
-	// exception is that if both types are function
-	// names, it should fail type analysis
+	if (tgtType->asRecord() && srcType->asRecord())
+	{
+		ta->errAssignOpd(this->pos());
+	}
+	
+	if (tgtType->asFn() || (srcType->asFn() && !mySrc->isFnCall()))
+	{
+		ta->errAssignOpd(this->pos());
+	}
+
+	if (mySrc->isFnCall() && tgtType == srcType->asFn()->getReturnType()) {
+		ta->nodeType(this, tgtType);
+		return;
+	}
+
 	if (tgtType == srcType){
 		ta->nodeType(this, tgtType);
 		return;
@@ -117,6 +127,53 @@ void AssignExpNode::typeAnalysis(TypeAnalysis * ta){
 	// type of the current node, so setting the node
 	// type must be done
 	ta->nodeType(this, ErrorType::produce());
+}
+
+void CallExpNode::typeAnalysis(TypeAnalysis * ta) {
+	bool error = false;
+	SemSymbol * sym = myID->getSymbol();
+	std::string myKind = sym->kindToString(sym->getKind());
+	const DataType * fnType = sym->getDataType();
+	if (myKind != "fn") {
+		ta->errCallee(this->pos());
+		error = true;
+	}
+	else {
+		auto formalTypes = fnType->asFn()->getFormalTypes();
+		if (formalTypes->size() != myArgs->size())
+		{
+			ta->errArgCount(this->pos());
+			error = true;
+		}
+		
+		ExpNode ** argArr = new ExpNode*[myArgs->size()];
+		int arrPos = 0;
+		for (auto arg : *myArgs) {
+			argArr[arrPos] = arg;
+			++arrPos;
+		}
+
+		arrPos = 0;
+		for (auto type : *formalTypes)
+		{
+			argArr[arrPos]->typeAnalysis(ta);
+			auto argType = ta->nodeType(argArr[arrPos]);
+			if (type != argType)
+			{
+				ta->errArgMatch(this->pos());
+				error = true;
+			}
+			++arrPos;
+		}
+	}
+	if (error)
+	{
+		ta->nodeType(this, ErrorType::produce());
+	}
+	else {
+		ta->nodeType(this, fnType->asFn()->getReturnType());
+	}
+	
 }
 
 void DeclNode::typeAnalysis(TypeAnalysis * ta){
