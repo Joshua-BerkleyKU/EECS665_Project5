@@ -1,10 +1,27 @@
 int a;
 
 int func() {
-	return false;
+	return 1;
+}
+
+int something(int a, int b) {
+	return a + b;
+}
+
+void yuh() {
+	return 5;
 }
 
 int main() {
 	a = func();
+	int b;
+	b = 2;
+	int c;
+	c = 3;
+	bool bruh;
+	bool = true;
+	b = something(a, b);
+	b = something(a);
+	b = something(a, c);
 	return a;
 }
