@@ -729,7 +729,7 @@ void IfStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto stmt : *myBody)
 		{
@@ -747,7 +747,7 @@ void IfElseStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto truebody : *myBodyTrue)
 		{
@@ -771,7 +771,7 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	const DataType * CondType = ta->nodeType(myCond);
 
-	if (CondType->isBool())
+	if (CondType->isBool() || CondType->asFn()->getReturnType()->isBool())
 	{
 		for (auto stmt : *myBody)
 		{
