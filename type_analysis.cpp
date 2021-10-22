@@ -61,6 +61,11 @@ void StmtNode::typeAnalysis(TypeAnalysis * ta){
 	TODO("Implement me in the subclass");
 }
 
+void ReturnStmtNode::typeAnalysis(TypeAnalysis * ta) {
+	myExp->typeAnalysis(ta);
+	ta->nodeType(this, ta->nodeType(myExp));
+}
+
 void AssignStmtNode::typeAnalysis(TypeAnalysis * ta){
 	myExp->typeAnalysis(ta);
 
@@ -843,6 +848,11 @@ void WhileStmtNode::typeAnalysis(TypeAnalysis * ta){
 
 	ta->errWhileCond(this->pos());
 	ta->nodeType(this, ErrorType::produce());
+}
+
+void CallStmtNode::typeAnalysis(TypeAnalysis * ta) {
+	myCallExp->typeAnalysis(ta);
+	ta->nodeType(this, ta->nodeType(myCallExp));
 }
 
 }
