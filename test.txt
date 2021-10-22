@@ -1,9 +1,10 @@
 int a;
 
-int main()
-{
-	if(false){
-		return 0;
-	}
-	int a;
+int func() {
+	return 2;
+}
+
+int main() {
+	a = func();
+	return a;
 }

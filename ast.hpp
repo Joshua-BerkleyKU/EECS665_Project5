@@ -295,6 +295,7 @@ public:
 	: StmtNode(p), myExp(exp){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 private:
 	ExpNode * myExp;
 };
@@ -307,6 +308,7 @@ public:
 	void unparse(std::ostream& out, int indent) override;
 	void unparseNested(std::ostream& out) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 	bool isFnCall() { return true; }
 private:
 	IDNode * myID;
@@ -546,6 +548,7 @@ public:
 	: StmtNode(p), myCallExp(expIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	void typeAnalysis(TypeAnalysis * ta) override;
 private:
 	CallExpNode * myCallExp;
 };
