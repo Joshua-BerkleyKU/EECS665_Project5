@@ -16,7 +16,7 @@ int main() {
 	int b;
 	b = 2;
 
-	receive a;
+	receive func;
 	report func;
 
 	a = func();
