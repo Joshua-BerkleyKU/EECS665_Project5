@@ -4,12 +4,6 @@ int func() {
 	return 1;
 }
 
-int something(int a, int b) {
-	return a + b;
-}
-
-
-
 int main() {
 	a = func();
 	return a;
