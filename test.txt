@@ -22,6 +22,6 @@ int main() {
 	heehaw = false;
 	bruh(a, b);
 	bruh(a, b, c);
-	bruh(b, heehaw);
+	bruh(b, heehaw, c);
 	return a;
 }
